@@ -1,0 +1,165 @@
+object springfield {
+	
+var viento = 10
+var riquezaDeSuelo = 0.9
+var necesidadEnergetica = 30
+var centrales = [centralAtomicaBurns, centralDeCarbonExBosque, centralEolicaElSuspiro]
+
+method riquezaDeSuelo(){
+return riquezaDeSuelo
+}
+
+method viento(){
+return viento
+}
+
+/* Punto 4 */
+
+method estaEnElHorno(){
+	return self.superanElPorcentajeIndicado() || self.todasLasCentralesSonContaminantes()     	
+}
+
+method produccionEnergetica3Centrales(){
+	return centrales.sum({central => central.produccionEnergetica()})
+}
+
+method superanElPorcentajeIndicado(){
+	return self.calcularSuPorcentaje() > 0.5
+}
+
+method calcularSuPorcentaje(){
+	return self.produccionEnergetica3Centrales() / necesidadEnergetica
+}
+
+method todasLasCentralesSonContaminantes(){
+	return centrales.all({central => central.contaminacion()})
+}
+
+/* Punto 5 */
+  method centralMasProductoraRegion1(){
+  	return centrales.max({central => central.produccionEnergetica()})
+  }
+  
+}
+
+object centralAtomicaBurns {
+	var varillasDeUranio = 10
+
+	
+method produccionEnergetica(){
+return 0.1*self.varillasDeUranio()
+}
+
+method varillasDeUranio(){
+	return varillasDeUranio
+}
+
+
+method contaminacion(){
+return self.varillasDeUranio()>20
+}
+
+}
+
+object centralDeCarbonExBosque{
+	 var capacidad = 20
+	
+method produccionEnergetica(){
+return 0.5 + self.capacidad() * springfield.riquezaDeSuelo()
+}
+
+method capacidad(){
+	return capacidad
+}
+
+method contaminacion(){
+return true
+}
+
+}
+
+object centralEolicaElSuspiro{
+	
+var turbinas = [turbina]
+
+method instalarTurbina(turbina){
+turbinas.add(turbina)
+}
+
+method produccionEnergetica(){
+    return turbinas.sum({
+turbina => turbina.produccionDeTurbina() })
+}
+
+method contaminacion(){
+	return false
+} 
+
+}
+
+object turbina{
+	
+method produccionDeTurbina(){
+return 0.2*springfield.viento()
+}
+
+}
+
+/* Punto 1 */
+
+object produccionDeCentral{
+       
+        	method saberSuProduccionEnergetica(central){
+			return central.produccionEnergetica()
+		}
+}
+
+/* Punto 2 */
+
+object contaminacionDeCentral {
+	  var centrales = [centralAtomicaBurns, centralDeCarbonExBosque, centralEolicaElSuspiro]
+	  
+	 method saberLasCentralesContaminantes(){
+	 	return centrales.filter({central => central.contaminacion()})
+	 }
+}
+
+/* Punto 3 */
+
+object cumplioConSusNecesidades{
+	var necesidadEnergetica = 20
+	var centrales = [centralAtomicaBurns, centralDeCarbonExBosque, centralEolicaElSuspiro]
+	
+	method cubrioSusNecesidades(){
+		return self.produccionEnergeticaDeSpringfield() > necesidadEnergetica
+	}
+	
+	method produccionEnergeticaDeSpringfield(){
+		return centrales.sum({central => central.produccionEnergetica()})
+	}
+}
+
+/* Punto 5 */
+
+object ciudadDeAlbuquerque{
+	var rioDeCaudal = 150
+	var centrales = [centralHidroelectrica]
+	
+	method rioDeCaudal(){
+		return rioDeCaudal
+		}
+		
+	method 	centralMasProductoraRegion2(){
+		return centrales.max({central => central.produccionEnergetica()})
+	}
+	
+}
+
+object centralHidroelectrica{
+	
+	method produccionEnergetica(){
+		return 2 * ciudadDeAlbuquerque.rioDeCaudal()
+	}
+}
+
+
